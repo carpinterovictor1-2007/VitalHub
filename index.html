@@ -16,18 +16,15 @@
 </head>
 <body>
 
-<!-- === PANTALLA DE ACCESO === -->
+<!-- PANTALLA DE ACCESO -->
 <div id="authOverlay" class="setup-overlay">
     <div class="auth-card">
-
-        <!-- Logo dentro de la card -->
         <div class="auth-logo">
             <i class="fa-solid fa-heart-pulse"></i>
             <span>VitalHub</span>
         </div>
         <p class="auth-subtitle">Tu compañero personal de salud</p>
 
-        <!-- Selector Login/Registro -->
         <div class="auth-tabs">
             <button id="tabLogin" class="auth-tab active" onclick="toggleAuthForm('login')">
                 <i class="fa-solid fa-right-to-bracket"></i> Ingresar
@@ -39,7 +36,7 @@
 
         <div class="auth-content">
 
-            <!-- == PESTAÑA: INGRESAR == -->
+            <!-- LOGIN -->
             <div id="loginForm" class="auth-form-container active">
                 <div class="input-group">
                     <label class="input-label"><i class="fa-solid fa-envelope"></i> Tu Correo</label>
@@ -52,14 +49,17 @@
                 <button class="btn btn-primary" onclick="login()">
                     <i class="fa-solid fa-right-to-bracket"></i> Entrar a mi cuenta
                 </button>
-                <div class="auth-divider"><span>¿Sin cuenta? No hay problema</span></div>
+                <button class="btn google-btn" onclick="loginWithGoogle()">
+                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18"> Continuar con Google
+                </button>
+                <div class="auth-divider"><span>O explora sin cuenta</span></div>
                 <button class="btn btn-ghost" onclick="enterAsGuest()">
                     <i class="fa-solid fa-door-open"></i> Entrar sin registrarse
                 </button>
                 <p class="auth-note"><i class="fa-solid fa-circle-info"></i> Sin registro, tus datos se guardan solo en este dispositivo.</p>
             </div>
 
-            <!-- == PESTAÑA: REGISTRARSE == -->
+            <!-- REGISTRO -->
             <div id="registerForm" class="auth-form-container">
                 <div class="input-group">
                     <label class="input-label"><i class="fa-solid fa-user"></i> ¿Cómo te llamas?</label>
@@ -71,15 +71,15 @@
                 </div>
                 <div class="input-group">
                     <label class="input-label"><i class="fa-solid fa-lock"></i> Elige una Contraseña</label>
-                    <input type="password" id="regPass" placeholder="Mínimo 8 caracteres">
+                    <input type="password" id="regPass" placeholder="Mínimo 6 caracteres">
                 </div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
                     <div class="input-group">
-                        <label class="input-label"><i class="fa-solid fa-cake-candles"></i> Edad</label>
-                        <input type="number" id="regAge" placeholder="Tus años">
+                        <label class="input-label">Edad</label>
+                        <input type="number" id="regAge" placeholder="Años">
                     </div>
                     <div class="input-group">
-                        <label class="input-label"><i class="fa-solid fa-venus-mars"></i> Género</label>
+                        <label class="input-label">Género</label>
                         <select id="regGender" style="width:100%; padding:0.85rem; border-radius:0.75rem; border:1px solid var(--border); background:var(--bg); color:var(--text-main);">
                             <option value="male">Masculino</option>
                             <option value="female">Femenino</option>
@@ -89,60 +89,35 @@
                 <button class="btn btn-primary" onclick="register()">
                     <i class="fa-solid fa-check"></i> Crear mi cuenta gratis
                 </button>
+                <button class="btn google-btn" onclick="loginWithGoogle()">
+                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18"> Registrarse con Google
+                </button>
                 <div class="auth-divider"><span>¿Solo quieres probar?</span></div>
                 <button class="btn btn-ghost" onclick="enterAsGuest()">
                     <i class="fa-solid fa-door-open"></i> Entrar sin registrarse
                 </button>
             </div>
-
         </div>
     </div>
 </div>
 
-<!-- === APP PRINCIPAL === -->
+<!-- APP PRINCIPAL -->
 <div class="app-container hidden" id="appContent">
-
-    <!-- Barra lateral de navegación -->
     <aside class="sidebar">
         <div class="logo">
             <i class="fa-solid fa-heart-pulse"></i> VitalHub
         </div>
-
         <nav class="nav-menu">
-            <li class="nav-item">
-                <a href="#" class="nav-link active" onclick="switchTab('dashboard', this)">
-                    <i class="fa-solid fa-house"></i>
-                    <span>Resumen</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="#" class="nav-link" onclick="switchTab('metrics', this)">
-                    <i class="fa-solid fa-scale-balanced"></i>
-                    <span>Mi Cuerpo</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="#" class="nav-link" onclick="switchTab('vault', this)">
-                    <i class="fa-solid fa-folder-heart"></i>
-                    <span>Mis Documentos</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="#" class="nav-link" onclick="switchTab('pantry', this)">
-                    <i class="fa-solid fa-bowl-food"></i>
-                    <span>Comer Sano</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="#" class="nav-link" onclick="switchTab('prevention', this)">
-                    <i class="fa-solid fa-shield-heart"></i>
-                    <span>Guía de Salud</span>
-                </a>
+            <li class="nav-item"><a href="#" class="nav-link active" onclick="switchTab('dashboard',this)"><i class="fa-solid fa-house"></i><span>Resumen</span></a></li>
+            <li class="nav-item"><a href="#" class="nav-link" onclick="switchTab('metrics',this)"><i class="fa-solid fa-scale-balanced"></i><span>Mi Cuerpo</span></a></li>
+            <li class="nav-item"><a href="#" class="nav-link" onclick="switchTab('vault',this)"><i class="fa-solid fa-folder-heart"></i><span>Mis Documentos</span></a></li>
+            <li class="nav-item"><a href="#" class="nav-link" onclick="switchTab('pantry',this)"><i class="fa-solid fa-bowl-food"></i><span>Comer Sano</span></a></li>
+            <li class="nav-item"><a href="#" class="nav-link" onclick="switchTab('prevention',this)"><i class="fa-solid fa-shield-heart"></i><span>Guía de Salud</span></a></li>
+            <li class="nav-item hidden" id="adminNavItem">
+                <a href="#" class="nav-link nav-admin" onclick="switchTab('admin',this)"><i class="fa-solid fa-crown"></i><span>Panel Admin</span></a>
             </li>
         </nav>
-
         <div class="sidebar-footer">
-            <!-- Indicador de modo -->
             <div id="syncStatus" class="sync-badge">
                 <i class="fa-solid fa-cloud-check"></i>
                 <div>
@@ -150,15 +125,12 @@
                     <div id="syncLabel" style="font-size:0.8rem; font-weight:600;">Cuenta Activa</div>
                 </div>
             </div>
-
             <button id="loginReminderBtn" class="btn btn-outline hidden" onclick="location.reload()" style="font-size:0.85rem; padding:0.7rem;">
                 <i class="fa-solid fa-user-plus"></i> Crear cuenta gratuita
             </button>
-
             <button onclick="logout()" class="btn btn-ghost-danger">
                 <i class="fa-solid fa-right-from-bracket"></i> Salir de la app
             </button>
-
             <button class="theme-toggle" onclick="toggleTheme()">
                 <i class="fa-solid fa-moon" id="themeIcon"></i>
                 <span id="themeLabel">Modo Oscuro</span>
@@ -166,44 +138,34 @@
         </div>
     </aside>
 
-    <!-- Contenido principal -->
     <main>
         <header>
             <div>
                 <h1 id="pageTitle">Tu Resumen de Hoy</h1>
-                <p id="greeting" class="page-subtitle">Cargando tu información...</p>
+                <p id="greeting" class="page-subtitle">Cargando...</p>
             </div>
             <div class="user-profile">
                 <div class="avatar" id="userAvatar">?</div>
                 <div>
-                    <div id="userName" style="font-weight:700;">Cargando...</div>
+                    <div id="userName" style="font-weight:700;">Usuario</div>
                     <div class="user-badge"><i class="fa-solid fa-circle-check"></i> VitalHub</div>
                 </div>
             </div>
         </header>
 
-        <!-- ===== PESTAÑA: RESUMEN ===== -->
+        <!-- RESUMEN -->
         <div id="tab-dashboard">
-
-            <!-- Tarjetas principales -->
             <section class="dashboard-grid">
-
-                <!-- Puntuación de salud -->
                 <div class="card health-score-card">
                     <div class="card-header">
                         <span class="card-title"><i class="fa-solid fa-star"></i> Tu Puntuación</span>
-                        <span class="tooltip-btn" onclick="showTip('score-tip')">Qué es esto?</span>
+                        <span class="tooltip-btn" onclick="showTip('score-tip')">¿Qué es esto?</span>
                     </div>
-                    <div class="tooltip-box hidden" id="score-tip">
-                        Tu puntuación de salud va de 0 a 100. Se calcula con tu agua, ánimo y peso. ¡Entre más alta, mejor!
-                    </div>
-                    <div class="score-display">
-                        <div class="indicator-value"><span id="healthScore">--</span><small>/100</small></div>
-                        <div class="indicator-label" id="healthStatusLabel">Calculando...</div>
-                    </div>
+                    <div class="tooltip-box hidden" id="score-tip">Tu puntuación va de 0 a 100. Se calcula con tu agua, ánimo y peso. ¡Entre más alta, mejor!</div>
+                    <div class="indicator-value"><span id="healthScore">--</span><small>/100</small></div>
+                    <div class="indicator-label" id="healthStatusLabel">Calculando...</div>
                 </div>
 
-                <!-- Agua tomada hoy -->
                 <div class="card">
                     <div class="card-header">
                         <span class="card-title"><i class="fa-solid fa-droplet" style="color:#2563eb"></i> Agua de Hoy</span>
@@ -218,23 +180,21 @@
                     </div>
                 </div>
 
-                <!-- Tu ánimo -->
                 <div class="card">
                     <div class="card-header">
                         <span class="card-title"><i class="fa-solid fa-face-smile" style="color:#10b981"></i> ¿Cómo te sientes?</span>
                     </div>
                     <div class="mood-selector">
-                        <button class="mood-btn" onclick="setMood(1)" title="Muy mal">😞</button>
-                        <button class="mood-btn" onclick="setMood(2)" title="Mal">😕</button>
-                        <button class="mood-btn" onclick="setMood(3)" title="Regular">😐</button>
-                        <button class="mood-btn" onclick="setMood(4)" title="Bien">🙂</button>
-                        <button class="mood-btn" onclick="setMood(5)" title="Excelente">😄</button>
+                        <button class="mood-btn" onclick="setMood(1)">😞</button>
+                        <button class="mood-btn" onclick="setMood(2)">😕</button>
+                        <button class="mood-btn" onclick="setMood(3)">😐</button>
+                        <button class="mood-btn" onclick="setMood(4)">🙂</button>
+                        <button class="mood-btn" onclick="setMood(5)">😄</button>
                     </div>
                     <div id="moodLabel" class="indicator-label" style="margin-top:0.75rem; text-align:center;">Selecciona cómo te sientes hoy</div>
                 </div>
             </section>
 
-            <!-- Gráfica semanal -->
             <div class="card chart-card">
                 <div class="card-header">
                     <span class="card-title"><i class="fa-solid fa-chart-area"></i> Tu semana de agua</span>
@@ -244,12 +204,12 @@
             </div>
         </div>
 
-        <!-- ===== PESTAÑA: MI CUERPO ===== -->
+        <!-- MI CUERPO -->
         <div id="tab-metrics" class="hidden">
             <div class="metrics-grid">
                 <section class="card">
                     <h2 class="card-title"><i class="fa-solid fa-scale-balanced"></i> ¿Cuánto pesas y mides?</h2>
-                    <p class="section-desc">Ingresa tu peso y tu altura para saber si estás en tu peso ideal.</p>
+                    <p class="section-desc">Ingresa tu peso y altura para saber si estás en tu peso ideal.</p>
                     <div class="input-group">
                         <label class="input-label">Mi peso en kilogramos (ej: 70)</label>
                         <input type="number" id="inputWeight" placeholder="Ej: 70" oninput="calculateBMI()">
@@ -265,51 +225,43 @@
                         <div id="bmiAdvice" class="result-advice"></div>
                     </div>
                 </section>
-
                 <section class="card">
                     <h2 class="card-title"><i class="fa-solid fa-pills"></i> Mis Medicinas</h2>
-                    <p class="section-desc">Agrega tus medicinas para recordar cuáles tienes que tomar hoy.</p>
+                    <p class="section-desc">Agrega tus medicinas para recordar cuáles tomar hoy.</p>
                     <div class="input-row">
                         <input type="text" id="medName" placeholder="Nombre de la medicina...">
-                        <button class="btn btn-primary" style="width:auto; padding:0.85rem 1.2rem;" onclick="addMedication()">
-                            <i class="fa-solid fa-plus"></i>
-                        </button>
+                        <button class="btn btn-primary" style="width:auto; padding:0.85rem 1.2rem;" onclick="addMedication()"><i class="fa-solid fa-plus"></i></button>
                     </div>
-                    <div id="medicationList" class="med-list">
-                        <div class="empty-state">
-                            <i class="fa-solid fa-pills"></i>
-                            <p>Aún no has agregado medicinas</p>
-                        </div>
-                    </div>
+                    <div id="medicationList" class="med-list"></div>
                 </section>
             </div>
         </div>
 
-        <!-- ===== PESTAÑA: MIS DOCUMENTOS ===== -->
+        <!-- MIS DOCUMENTOS -->
         <div id="tab-vault" class="hidden">
             <section class="card">
                 <h2 class="card-title"><i class="fa-solid fa-folder-heart"></i> Mis Documentos de Salud</h2>
-                <p class="section-desc">Guarda aquí tus exámenes, recetas médicas y análisis. Solo tú puedes verlos.</p>
-                <div class="dropzone" id="dropzone" onclick="simulateFileUpload()">
+                <p class="section-desc">Guarda aquí tus exámenes y recetas. Solo tú puedes verlos y eliminarlos.</p>
+                <div class="dropzone" onclick="uploadFile()">
                     <i class="fa-solid fa-cloud-arrow-up"></i>
-                    <p style="font-weight:700; margin-top:1rem;">Toca aquí para subir un documento</p>
+                    <p style="font-weight:700; margin-top:1rem;">Toca aquí para agregar un documento</p>
                     <p style="font-size:0.8rem; color:var(--text-muted);">Análisis, recetas, radiografías...</p>
                 </div>
                 <div id="fileList" class="file-list" style="margin-top:1.5rem;"></div>
             </section>
         </div>
 
-        <!-- ===== PESTAÑA: COMER SANO ===== -->
+        <!-- COMER SANO -->
         <div id="tab-pantry" class="hidden">
             <section class="card">
                 <div class="card-header">
                     <h2 class="card-title"><i class="fa-solid fa-bowl-food"></i> Recetas Saludables con IA</h2>
                     <span class="badge">Powered by Gemini</span>
                 </div>
-                <p class="section-desc">Dinos qué tienes en tu cocina y te damos una receta nutritiva y deliciosa.</p>
+                <p class="section-desc">Dinos qué tienes en tu cocina y te damos una receta nutritiva.</p>
                 <div class="input-group">
                     <label class="input-label">¿Qué ingredientes tienes disponibles?</label>
-                    <input type="text" id="recipeInput" placeholder="Ej: pollo, arroz, tomate, cebolla...">
+                    <input type="text" id="recipeInput" placeholder="Ej: pollo, arroz, tomate...">
                 </div>
                 <button class="btn btn-primary" onclick="generateRecipe()">
                     <i class="fa-solid fa-wand-magic-sparkles"></i> Generar mi receta saludable
@@ -318,31 +270,62 @@
             </section>
         </div>
 
-        <!-- ===== PESTAÑA: GUÍA DE SALUD ===== -->
+        <!-- GUÍA DE SALUD -->
         <div id="tab-prevention" class="hidden">
             <section class="card">
                 <h2 class="card-title"><i class="fa-solid fa-shield-heart"></i> ¿Qué chequeos debo hacerme?</h2>
-                <p class="section-desc">Basado en tu edad, estos son los exámenes que los médicos recomiendan. ¡Más vale prevenir!</p>
+                <p class="section-desc">Basado en tu edad, estos son los exámenes recomendados. ¡Más vale prevenir!</p>
                 <div class="table-container">
                     <table id="preventionTable">
-                        <thead>
-                            <tr>
-                                <th>Examen recomendado</th>
-                                <th>¿Cada cuánto?</th>
-                                <th>Importancia</th>
-                            </tr>
-                        </thead>
+                        <thead><tr><th>Examen recomendado</th><th>¿Cada cuánto?</th><th>Importancia</th></tr></thead>
                         <tbody></tbody>
                     </table>
                 </div>
             </section>
         </div>
 
+        <!-- PANEL ADMIN -->
+        <div id="tab-admin" class="hidden">
+            <div class="metrics-grid">
+                <section class="card admin-live-card">
+                    <div class="card-header">
+                        <h2 class="card-title"><i class="fa-solid fa-signal"></i> Usuarios en Línea</h2>
+                        <span class="live-badge"><i class="fa-solid fa-circle"></i> EN VIVO</span>
+                    </div>
+                    <div class="admin-stat">
+                        <div id="adminOnlineCount" style="font-size:3.5rem; font-weight:800; color:var(--secondary);">0</div>
+                        <div style="color:var(--text-muted); font-weight:600;">usuarios conectados ahora</div>
+                    </div>
+                    <div id="adminOnlineList" class="online-list"></div>
+                </section>
+                <section class="card">
+                    <div class="card-header">
+                        <h2 class="card-title"><i class="fa-solid fa-chart-bar"></i> Estadísticas Globales</h2>
+                    </div>
+                    <div class="admin-stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-value" id="adminTotalUsers">--</div>
+                            <div class="stat-label">Usuarios registrados</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="adminOnlineCountDetail">--</div>
+                            <div class="stat-label">En línea ahora</div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
     </main>
 </div>
 
 <div id="toast">✅ Hecho!</div>
 
+<!-- Firebase SDKs vía CDN (sin instalación) -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+<script src="firebase-config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="comando.js"></script>
 </body>
