@@ -110,7 +110,6 @@
         <nav class="nav-menu">
             <li class="nav-item"><a href="#" class="nav-link active" onclick="switchTab('dashboard',this)"><i class="fa-solid fa-house"></i><span>Resumen</span></a></li>
             <li class="nav-item"><a href="#" class="nav-link" onclick="switchTab('metrics',this)"><i class="fa-solid fa-scale-balanced"></i><span>Mi Cuerpo</span></a></li>
-            <li class="nav-item"><a href="#" class="nav-link" onclick="switchTab('vault',this)"><i class="fa-solid fa-folder-heart"></i><span>Mis Documentos</span></a></li>
             <li class="nav-item"><a href="#" class="nav-link" onclick="switchTab('pantry',this)"><i class="fa-solid fa-bowl-food"></i><span>Comer Sano</span></a></li>
             <li class="nav-item"><a href="#" class="nav-link" onclick="switchTab('prevention',this)"><i class="fa-solid fa-shield-heart"></i><span>Guía de Salud</span></a></li>
             <li class="nav-item hidden" id="adminNavItem">
@@ -237,19 +236,6 @@
             </div>
         </div>
 
-        <!-- MIS DOCUMENTOS -->
-        <div id="tab-vault" class="hidden">
-            <section class="card">
-                <h2 class="card-title"><i class="fa-solid fa-folder-heart"></i> Mis Documentos de Salud</h2>
-                <p class="section-desc">Guarda aquí tus exámenes y recetas. Solo tú puedes verlos y eliminarlos.</p>
-                <div class="dropzone" onclick="uploadFile()">
-                    <i class="fa-solid fa-cloud-arrow-up"></i>
-                    <p style="font-weight:700; margin-top:1rem;">Toca aquí para agregar un documento</p>
-                    <p style="font-size:0.8rem; color:var(--text-muted);">Análisis, recetas, radiografías...</p>
-                </div>
-                <div id="fileList" class="file-list" style="margin-top:1.5rem;"></div>
-            </section>
-        </div>
 
         <!-- COMER SANO -->
         <div id="tab-pantry" class="hidden">
@@ -326,8 +312,6 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
 
-<!-- Input oculto para subida de archivos reales -->
-<input type="file" id="realFileInput" style="display:none;" onchange="handleFileSelect(event)">
 
 <script src="firebase-config.js"></script>
 <script src="firebase-init.js"></script>
