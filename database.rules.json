@@ -1,0 +1,62 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+
+    "presence": {
+      "$uid": {
+        ".read": "auth != null",
+        ".write": "auth != null && auth.uid === $uid",
+        ".validate": "newData.hasChildren(['name', 'email', 'online', 'lastSeen'])",
+        "name":     { ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 100" },
+        "email":    { ".validate": "newData.isString() && newData.val().matches(/^[^@]+@[^@]+\\.[^@]+$/)" },
+        "online":   { ".validate": "newData.isBoolean()" },
+        "lastSeen": { ".validate": "newData.isNumber()" }
+      }
+    },
+
+    "users": {
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || root.child('users').child(auth.uid).child('isAdmin').val() === true)",
+        ".write": "auth != null && auth.uid === $uid",
+        ".validate": "newData.hasChildren(['name', 'email'])",
+        "name":     { ".validate": "newData.isString() && newData.val().length > 0" },
+        "email":    { ".validate": "newData.isString()" },
+        "age":      { ".validate": "!newData.exists() || (newData.isNumber() && newData.val() > 0 && newData.val() < 150)" },
+        "gender":   { ".validate": "!newData.exists() || newData.val() === 'male' || newData.val() === 'female'" },
+        "isAdmin":  { ".validate": "newData.isBoolean()" }
+      }
+    },
+
+    "metrics": {
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || root.child('users').child(auth.uid).child('isAdmin').val() === true)",
+        ".write": "auth != null && auth.uid === $uid",
+        ".validate": "newData.hasChildren(['water', 'mood'])",
+        "water": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 20" },
+        "mood":  { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 5" },
+        "weight":{ ".validate": "!newData.exists() || (newData.isNumber() && newData.val() >= 0 && newData.val() <= 500)" },
+        "height":{ ".validate": "!newData.exists() || (newData.isNumber() && newData.val() >= 0 && newData.val() <= 300)" }
+      }
+    },
+
+    "meds": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid"
+      }
+    },
+
+    "files": {
+      "$uid": {
+        "$fileId": {
+          ".read": "auth != null && auth.uid === $uid",
+          ".write": "auth != null && auth.uid === $uid",
+          ".validate": "newData.hasChildren(['name', 'uploadedAt'])",
+          "name":       { ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 255" },
+          "uploadedAt": { ".validate": "newData.isNumber()" }
+        }
+      }
+    }
+  }
+}

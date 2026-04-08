@@ -1,0 +1,20 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "presence",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "online",   "order": "ASCENDING" },
+        { "fieldPath": "lastSeen", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "vault",
+      "queryScope": "COLLECTION_GROUP",
+      "fields": [
+        { "fieldPath": "uploaded_at", "order": "DESCENDING" }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}

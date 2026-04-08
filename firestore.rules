@@ -1,0 +1,91 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ── Helper Functions ────────────────────────────────────
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(uid) {
+      return isAuthenticated() && request.auth.uid == uid;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() &&
+             request.auth.token.email == 'carpinterovictor1@gmail.com';
+    }
+
+    function isValidEmail(email) {
+      return email.matches('^[^@]+@[^@]+\\.[^@]+$');
+    }
+
+    // ── Users ───────────────────────────────────────────────
+    // Each user can only access their own profile.
+    // Admin can read all profiles.
+    match /users/{uid} {
+      allow read:   if isOwner(uid) || isAdmin();
+      allow create: if isOwner(uid)
+                    && request.resource.data.keys().hasAll(['name', 'email'])
+                    && request.resource.data.name is string
+                    && request.resource.data.name.size() > 0
+                    && isValidEmail(request.resource.data.email);
+      allow update: if isOwner(uid);
+      allow delete: if isAdmin();
+    }
+
+    // ── Metrics ─────────────────────────────────────────────
+    // Users can only read/write their own daily metrics.
+    match /metrics/{uid} {
+      allow read, write: if isOwner(uid);
+      allow read:        if isAdmin();  // Admin can view all metrics
+    }
+
+    // ── Medications ─────────────────────────────────────────
+    // Users can only access their own medication list.
+    match /meds/{uid} {
+      allow read, write: if isOwner(uid);
+    }
+
+    // ── File Vault ──────────────────────────────────────────
+    // Each file belongs exclusively to its owner.
+    match /files/{uid}/vault/{fileId} {
+      allow read, create: if isOwner(uid);
+      allow delete:       if isOwner(uid) || isAdmin();
+      allow update:       if false;  // Files are immutable once uploaded
+
+      // Validate file structure on creation
+      allow create: if isOwner(uid)
+                    && request.resource.data.keys().hasAll(['name', 'uploaded_at'])
+                    && request.resource.data.name is string
+                    && request.resource.data.name.size() > 0
+                    && request.resource.data.name.size() <= 255;
+    }
+
+    // ── Presence (Online Status) ─────────────────────────────
+    // Any authenticated user can write their own presence.
+    // All authenticated users can read presence (for admin panel).
+    match /presence/{uid} {
+      allow read:   if isAuthenticated();
+      allow write:  if isOwner(uid)
+                    && request.resource.data.keys().hasAll(['name', 'email', 'online', 'lastSeen'])
+                    && request.resource.data.online is bool
+                    && request.resource.data.name is string
+                    && isValidEmail(request.resource.data.email);
+      allow delete: if isOwner(uid) || isAdmin();
+    }
+
+    // ── Admin Metadata ───────────────────────────────────────
+    // Global read-only counters and statistics (admin-managed).
+    match /meta/{docId} {
+      allow read:  if isAuthenticated();
+      allow write: if isAdmin();
+    }
+
+    // ── Deny Everything Else ─────────────────────────────────
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
