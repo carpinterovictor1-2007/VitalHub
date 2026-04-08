@@ -13,3 +13,6 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db   = firebase.firestore();
 const storage = firebase.storage();
+
+// IA Engine - Consigue tu clave en https://aistudio.google.com/app/apikey
+const GEMINI_API_KEY = "TU_CLAVE_AQUI"; 

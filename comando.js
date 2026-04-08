@@ -333,16 +333,37 @@ async function generateRecipe() {
     const ingredients = document.getElementById('recipeInput')?.value.trim();
     const resultDiv = document.getElementById('recipeResult');
     if (!ingredients) return showToast('⚠️ Ingresa ingredientes primero');
+
+    if (typeof GEMINI_API_KEY === 'undefined' || GEMINI_API_KEY === "TU_CLAVE_AQUI") {
+        return showToast('🔑 Configura tu GEMINI_API_KEY en firebase-config.js');
+    }
+
     resultDiv.style.display = 'block';
-    resultDiv.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Generando tu receta...';
+    resultDiv.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Generando tu receta saludable...';
+
+    const prompt = `Eres un nutricionista profesional. Crea una receta saludable, práctica y deliciosa usando estos ingredientes: ${ingredients}. Incluye: nombre del plato, tiempo de preparación, lista de ingredientes con cantidades, pasos detallados numerados, y beneficios nutricionales. Responde en español, de forma clara y amigable.`;
+
     try {
-        const res = await fetch('/api/recipe', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ ingredients }) });
-        const data = await res.json();
-        resultDiv.innerHTML = data.recipe
-            ? data.recipe.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>')
-            : '<span style="color:var(--danger)">No se pudo generar la receta.</span>';
+        const response = await fetch(
+            `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`,
+            {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ contents: [{ role: 'user', parts: [{ text: prompt }] }] })
+            }
+        );
+
+        const data = await response.json();
+        
+        if (data.candidates && data.candidates[0].content.parts[0].text) {
+            const text = data.candidates[0].content.parts[0].text;
+            resultDiv.innerHTML = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+        } else {
+            throw new Error('Formato de respuesta inválido');
+        }
     } catch (e) {
-        resultDiv.innerHTML = '<span style="color:var(--danger)">⚠️ Inicia el servidor con <code>node server.js</code> para usar esta función.</span>';
+        console.error('Error con Gemini:', e);
+        resultDiv.innerHTML = '<span style="color:var(--danger)">⚠️ Error al conectar con la IA. Asegúrate de que tu clave sea correcta.</span>';
     }
 }
 
