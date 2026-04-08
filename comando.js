@@ -327,22 +327,63 @@ function addMedication() {
 function toggleMed(i) { userData.meds[i].taken = !userData.meds[i].taken; syncMeds(); renderMedications(); }
 function removeMed(i) { const n=userData.meds[i].name; userData.meds.splice(i,1); syncMeds(); renderMedications(); showToast(`🗑️ ${n} eliminada`); }
 
-// ─── VAULT ────────────────────────────────────────────────
-async function uploadFile() {
-    const name = prompt('¿Cuál es el nombre del documento?', 'Examen de sangre');
-    if (!name?.trim()) return;
+// ─── VAULT (Real File Management) ─────────────────────────
+function uploadFile() {
     if (isGuest) {
+        showToast('🔒 Regístrate para guardar archivos en la nube');
+        // Mantener la simulación para invitados si lo desean
+        const name = prompt('Nombre del documento (Solo simulación en modo invitado):', 'Examen de sangre');
+        if (!name?.trim()) return;
         const files = JSON.parse(localStorage.getItem('vH_files')||'[]');
         files.unshift({ id: Date.now(), name: name.trim(), uploaded_at: new Date().toISOString() });
         localStorage.setItem('vH_files', JSON.stringify(files));
         renderFiles(files);
-    } else if (currentUser) {
-        try {
-            await db.collection('files').doc(currentUser.uid).collection('vault').add({ name: name.trim(), uploaded_at: firebase.firestore.FieldValue.serverTimestamp() });
-            await loadFiles();
-        } catch (e) { return showToast('⚠️ Error al guardar'); }
+        showToast('📄 Guardado localmente');
+        return;
     }
-    showToast(`📄 "${name}" guardado`);
+    // Para usuarios registrados, abrir el selector de archivos real
+    document.getElementById('realFileInput').click();
+}
+
+async function handleFileSelect(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    if (file.size > 5 * 1024 * 1024) {
+        return showToast('⚠️ Error: El archivo supera el límite de 5MB');
+    }
+
+    showToast('⏳ Subiendo archivo...');
+    
+    try {
+        const uid = currentUser.uid;
+        const storageRef = storage.ref(`vault/${uid}/${Date.now()}_${file.name}`);
+        
+        // 1. Subir a Firebase Storage
+        const snapshot = await storageRef.put(file);
+        
+        // 2. Obtener URL de descarga
+        const downloadURL = await snapshot.ref.getDownloadURL();
+        
+        // 3. Registrar en Firestore
+        await db.collection('files').doc(uid).collection('vault').add({
+            name: file.name,
+            url: downloadURL,
+            storagePath: storageRef.fullPath,
+            size: file.size,
+            type: file.type,
+            uploaded_at: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        
+        showToast('✅ Archivo guardado con éxito');
+        await loadFiles();
+    } catch (e) {
+        console.error('Error en subida:', e);
+        showToast('❌ Error al subir el archivo');
+    } finally {
+        // Limpiar el input para permitir volver a seleccionar el mismo archivo
+        event.target.value = '';
+    }
 }
 
 async function loadFiles() {
@@ -350,31 +391,70 @@ async function loadFiles() {
     if (!currentUser) return;
     try {
         const snap = await db.collection('files').doc(currentUser.uid).collection('vault').orderBy('uploaded_at','desc').get();
-        renderFiles(snap.docs.map(d => ({ id: d.id, ...d.data(), uploaded_at: d.data().uploaded_at?.toDate?.().toISOString() || new Date().toISOString() })));
+        renderFiles(snap.docs.map(d => ({
+            id: d.id,
+            ...d.data(),
+            uploaded_at: d.data().uploaded_at?.toDate?.().toISOString() || new Date().toISOString()
+        })));
     } catch (e) { renderFiles([]); }
 }
 
-async function deleteFile(id) {
-    if (!confirm('¿Eliminar este documento?')) return;
+async function deleteFile(id, storagePath) {
+    if (!confirm('¿Seguro que quieres eliminar este documento permanentemente?')) return;
+    
     if (isGuest) {
         let files = JSON.parse(localStorage.getItem('vH_files')||'[]');
         files = files.filter(f => f.id !== id);
         localStorage.setItem('vH_files', JSON.stringify(files));
         renderFiles(files);
+        showToast('🗑️ Eliminado');
     } else if (currentUser) {
-        try { await db.collection('files').doc(currentUser.uid).collection('vault').doc(String(id)).delete(); await loadFiles(); }
-        catch (e) { return showToast('⚠️ Error al eliminar'); }
+        try {
+            // 1. Eliminar de Storage si existe el path
+            if (storagePath) {
+                await storage.ref(storagePath).delete();
+            }
+            // 2. Eliminar de Firestore
+            await db.collection('files').doc(currentUser.uid).collection('vault').doc(String(id)).delete();
+            await loadFiles();
+            showToast('🗑️ Documento eliminado');
+        } catch (e) {
+            console.error('Error al eliminar:', e);
+            showToast('⚠️ Error al eliminar del servidor');
+        }
     }
-    showToast('🗑️ Documento eliminado');
 }
 
 function renderFiles(files) {
     const list = document.getElementById('fileList');
     if (!list) return;
-    if (!files?.length) { list.innerHTML=`<div class="empty-state"><i class="fa-solid fa-folder-open"></i><p>No tienes documentos guardados.<br>Toca el botón de arriba para agregar uno.</p></div>`; return; }
+    if (!files?.length) {
+        list.innerHTML=`<div class="empty-state"><i class="fa-solid fa-folder-open"></i><p>No tienes documentos guardados.<br>Usa el botón "Subir" para empezar.</p></div>`;
+        return;
+    }
+    
     list.innerHTML = files.map(f => {
         const date = new Date(f.uploaded_at).toLocaleDateString('es-ES',{day:'2-digit',month:'short',year:'numeric'});
-        return `<div class="file-item"><i class="fa-solid fa-file-medical" style="color:var(--primary);font-size:1.2rem"></i><div style="flex:1"><div style="font-weight:700;font-size:0.9rem">${f.name}</div><div style="font-size:0.75rem;color:var(--text-muted)"><i class="fa-regular fa-calendar"></i> ${date}</div></div><button onclick="deleteFile('${f.id}')" style="background:none;border:none;color:var(--danger);cursor:pointer;padding:0.4rem;border-radius:0.5rem" title="Eliminar"><i class="fa-solid fa-trash-can"></i></button></div>`;
+        const isReal = !!f.url;
+        
+        return `
+        <div class="file-item">
+            <i class="fa-solid ${f.type?.includes('pdf') ? 'fa-file-pdf' : 'fa-file-image'}" style="color:var(--primary);font-size:1.2rem"></i>
+            <div style="flex:1; margin-left: 0.5rem;">
+                <div style="font-weight:700;font-size:0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 180px;">${f.name}</div>
+                <div style="font-size:0.75rem;color:var(--text-muted)"><i class="fa-regular fa-calendar"></i> ${date}</div>
+            </div>
+            <div style="display:flex; gap: 0.5rem;">
+                ${isReal ? `
+                    <a href="${f.url}" target="_blank" class="btn btn-ghost" style="padding: 0.4rem; color: var(--secondary);" title="Ver archivo">
+                        <i class="fa-solid fa-eye"></i>
+                    </a>
+                ` : ''}
+                <button onclick="deleteFile('${f.id}', '${f.storagePath || ''}')" style="background:none;border:none;color:var(--danger);cursor:pointer;padding:0.4rem;border-radius:0.5rem" title="Eliminar">
+                    <i class="fa-solid fa-trash-can"></i>
+                </button>
+            </div>
+        </div>`;
     }).join('');
 }
 
