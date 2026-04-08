@@ -15,7 +15,17 @@ let userData = {
 };
 
 // ─── INIT ─────────────────────────────────────────────────
-function init() {
+async function init() {
+    // Esperar a que el archivo .env se cargue
+    if (typeof envPromise !== 'undefined') await envPromise;
+    
+    // Inicializar Firebase con las claves dinámicas
+    const configOk = initializeDynamicConfig();
+    if (!configOk) {
+        showToast('❌ Error crítico: Falta configuración .env');
+        return;
+    }
+
     applyTheme(localStorage.getItem('vH_theme') || 'light');
 
     if (isGuest) {

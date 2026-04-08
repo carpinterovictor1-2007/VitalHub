@@ -1,18 +1,34 @@
-// Firebase Configuration - VitalHub Supreme
-const firebaseConfig = {
-  apiKey: "AIzaSyCJ6yLsaJCjUdKOnfq2hKiBZHPD9y50Ayo",
-  authDomain: "salud-preventiva-a7da3.firebaseapp.com",
-  projectId: "salud-preventiva-a7da3",
-  storageBucket: "salud-preventiva-a7da3.firebasestorage.app",
-  messagingSenderId: "135525184117",
-  appId: "1:135525184117:web:50a1ded351cbcc5b38fe3c"
-};
+/**
+ * Firebase Configuration - VitalHub Supreme
+ * ========================================
+ * Las claves se cargan dinámicamente desde el archivo .env
+ * mediante el script env-loader.js.
+ */
 
-firebase.initializeApp(firebaseConfig);
+// Global Variable Placeholders
+let auth, db, storage, GEMINI_API_KEY;
 
-const auth = firebase.auth();
-const db   = firebase.firestore();
-const storage = firebase.storage();
+function initializeDynamicConfig() {
+    const config = {
+        apiKey:            window.env?.FIREBASE_API_KEY,
+        authDomain:        window.env?.FIREBASE_AUTH_DOMAIN,
+        projectId:         window.env?.FIREBASE_PROJECT_ID,
+        storageBucket:     window.env?.FIREBASE_STORAGE_BUCKET,
+        messagingSenderId: window.env?.FIREBASE_MESSAGING_SENDER_ID,
+        appId:             window.env?.FIREBASE_APP_ID
+    };
 
-// IA Engine - Consigue tu clave en https://aistudio.google.com/app/apikey
-const GEMINI_API_KEY = "TU_CLAVE_AQUI"; 
+    if (!config.apiKey) {
+        console.error('❌ Error: No se encontraron las claves de Firebase en .env');
+        return false;
+    }
+
+    firebase.initializeApp(config);
+    auth = firebase.auth();
+    db   = firebase.firestore();
+    storage = firebase.storage();
+    GEMINI_API_KEY = window.env?.GEMINI_API_KEY;
+
+    console.log('🔥🔥 Servicios de Firebase e IA configurados desde .env');
+    return true;
+}
