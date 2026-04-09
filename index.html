@@ -110,7 +110,7 @@
         <nav class="nav-menu">
             <li class="nav-item"><a href="#" class="nav-link active" onclick="switchTab('dashboard',this)"><i class="fa-solid fa-house"></i><span>Resumen</span></a></li>
             <li class="nav-item"><a href="#" class="nav-link" onclick="switchTab('metrics',this)"><i class="fa-solid fa-scale-balanced"></i><span>Mi Cuerpo</span></a></li>
-            <li class="nav-item"><a href="#" class="nav-link" onclick="switchTab('pantry',this)"><i class="fa-solid fa-bowl-food"></i><span>Comer Sano</span></a></li>
+            <li class="nav-item"><a href="#" class="nav-link" onclick="switchTab('pantry',this)"><i class="fa-solid fa-earth-americas"></i><span>Explorar</span></a></li>
             <li class="nav-item"><a href="#" class="nav-link" onclick="switchTab('prevention',this)"><i class="fa-solid fa-shield-heart"></i><span>Guía de Salud</span></a></li>
             <li class="nav-item hidden" id="adminNavItem">
                 <a href="#" class="nav-link nav-admin" onclick="switchTab('admin',this)"><i class="fa-solid fa-crown"></i><span>Panel Admin</span></a>
@@ -237,22 +237,23 @@
         </div>
 
 
-        <!-- COMER SANO -->
+        <!-- EXPLORAR SALUD (Buscador Web) -->
         <div id="tab-pantry" class="hidden">
             <section class="card">
                 <div class="card-header">
-                    <h2 class="card-title"><i class="fa-solid fa-bowl-food"></i> Recetas Saludables con IA</h2>
-                    <span class="badge">Powered by Gemini</span>
+                    <h2 class="card-title"><i class="fa-solid fa-earth-americas"></i> Explorador de Salud & Recetas</h2>
                 </div>
-                <p class="section-desc">Dinos qué tienes en tu cocina y te damos una receta nutritiva.</p>
+                <p class="section-desc">Busca información verificada, recetas saludables y consejos médicos directamente en la web.</p>
                 <div class="input-group">
-                    <label class="input-label">¿Qué ingredientes tienes disponibles?</label>
-                    <input type="text" id="recipeInput" placeholder="Ej: pollo, arroz, tomate...">
+                    <label class="input-label">¿Qué deseas encontrar hoy?</label>
+                    <input type="text" id="recipeInput" placeholder="Ej: Recetas saludables con brócoli, beneficios del jengibre...">
                 </div>
-                <button class="btn btn-primary" onclick="generateRecipe()">
-                    <i class="fa-solid fa-wand-magic-sparkles"></i> Generar mi receta saludable
+                <button class="btn btn-primary" onclick="searchHealthWeb()">
+                    <i class="fa-solid fa-magnifying-glass"></i> Buscar en la Web
                 </button>
-                <div id="recipeResult" class="recipe-result"></div>
+                <div id="recipeResult" class="recipe-result" style="display:none; text-align:center; padding:1.5rem;">
+                    <p style="color:var(--text-muted); font-size:0.9rem;">Redirigiendo a resultados externos...</p>
+                </div>
             </section>
         </div>
 

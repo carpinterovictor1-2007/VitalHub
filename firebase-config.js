@@ -6,7 +6,7 @@
  */
 
 // Global Variable Placeholders
-let auth, db, storage, GEMINI_API_KEY;
+let auth, db, storage;
 
 function initializeDynamicConfig() {
     const config = {
@@ -27,8 +27,7 @@ function initializeDynamicConfig() {
     auth = firebase.auth();
     db   = firebase.firestore();
     storage = firebase.storage();
-    GEMINI_API_KEY = window.env?.GEMINI_API_KEY;
 
-    console.log('🔥🔥 Servicios de Firebase e IA configurados desde .env');
+    console.log('🔥🔥 Servicios de Firebase configurados desde .env');
     return true;
 }
