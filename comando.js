@@ -16,25 +16,32 @@ let userData = {
 
 // ─── INIT ─────────────────────────────────────────────────
 function init() {
+    console.log('🏁 Iniciando VitalHub (v3.0)...');
     try {
         applyTheme(localStorage.getItem('vH_theme') || 'light');
 
+        // Detectar si estamos en un entorno forzado de Invitado
         if (isGuest) {
+            console.log('👻 Identificado como Invitado.');
             loadGuestData();
             showApp();
             return;
         }
 
-        if (typeof auth === 'undefined' || !auth) {
-            console.warn('⚠️ Firebase Auth no detectado. Activando Modo Invitado de emergencia.');
+        // Verificar servicios globales de Firebase
+        const authService = window.auth || (typeof auth !== 'undefined' ? auth : null);
+        
+        if (!authService) {
+            console.warn('⚠️ Servicios de Auth no encontrados. Activando Modo Invitado de emergencia.');
             enterAsGuest();
             return;
         }
 
-        auth.onAuthStateChanged(async user => {
+        authService.onAuthStateChanged(async user => {
             if (user) {
                 currentUser = user;
-                isAdmin = user.email === ADMIN_EMAIL;
+                window.currentUser = user; // Asegurar global
+                isAdmin = user.email === (window.ADMIN_EMAIL || ADMIN_EMAIL);
                 userData.name = user.displayName || user.email.split('@')[0];
                 await loadUserDataFromFirestore();
                 showApp();
@@ -45,8 +52,9 @@ function init() {
             }
         });
     } catch (e) {
-        console.error('❌ Error crítico en init():', e);
-        showToast('⚠️ Error al iniciar la aplicación');
+        console.error('❌ Error fatal en arranque:', e);
+        // Último recurso: intentar cargar como invitado
+        enterAsGuest();
     }
 }
 
