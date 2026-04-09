@@ -251,8 +251,11 @@
                 <button class="btn btn-primary" onclick="searchHealthWeb()">
                     <i class="fa-solid fa-magnifying-glass"></i> Buscar en la Web
                 </button>
-                <div id="recipeResult" class="recipe-result" style="display:none; text-align:center; padding:1.5rem;">
-                    <p style="color:var(--text-muted); font-size:0.9rem;">Redirigiendo a resultados externos...</p>
+                <div id="recipeResult" class="recipe-result">
+                    <div style="text-align:center; padding:1.5rem; color:var(--text-muted);">
+                        <i class="fa-solid fa-brain fa-fade" style="font-size:2rem; margin-bottom:1rem; opacity:0.5;"></i>
+                        <p>Tu asistente está listo. Ingresa una consulta arriba.</p>
+                    </div>
                 </div>
             </section>
         </div>
@@ -308,16 +311,16 @@
 <div id="toast">✅ Hecho!</div>
 
 <!-- Scripts de VitalHub Supreme -->
-<script src="config.js"></script>
+<script src="config.js?v=2.1"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
 
 
-<script src="firebase-config.js"></script>
-<script src="firebase-init.js"></script>
+<script src="firebase-config.js?v=2.1"></script>
+<script src="firebase-init.js?v=2.1"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="comando.js"></script>
+<script src="comando.js?v=2.1"></script>
 </body>
 </html>

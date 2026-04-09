@@ -328,25 +328,66 @@ function toggleMed(i) { userData.meds[i].taken = !userData.meds[i].taken; syncMe
 function removeMed(i) { const n=userData.meds[i].name; userData.meds.splice(i,1); syncMeds(); renderMedications(); showToast(`🗑️ ${n} eliminada`); }
 
 
-// ─── AI RECIPE ────────────────────────────────────────────
-// ─── WEB SEARCH (Reemplaza a la IA) ────────────────────────
-function searchHealthWeb() {
+// ─── INTERNAL HEALTH REPORT (IA SUPREME) ──────────────────
+async function searchHealthWeb() {
     const query = document.getElementById('recipeInput')?.value.trim();
+    const resultDiv = document.getElementById('recipeResult');
     if (!query) return showToast('⚠️ Ingresa términos de búsqueda');
     
-    const resultDiv = document.getElementById('recipeResult');
-    resultDiv.style.display = 'block';
+    const apiKey = window.CONFIG?.GEMINI_API_KEY;
+    if (!apiKey || apiKey === "AIzaSy...") {
+        return showToast('🔑 Error: Clave de IA no configurada');
+    }
+
+    resultDiv.innerHTML = `
+        <div style="text-align:center; padding:1.5rem;">
+            <i class="fa-solid fa-spinner fa-spin" style="font-size:2rem; color:var(--secondary); margin-bottom:1rem;"></i>
+            <p style="font-weight:600;">Generando informe de salud profesional...</p>
+        </div>
+    `;
     
-    // Abrir búsqueda en Google en pestaña nueva de forma segura
-    const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(query)}+receta+saludable+consejo+medico`;
-    window.open(searchUrl, '_blank');
-    
-    showToast('🌐 Abriendo explorador web...');
-    
-    // Ocultar mensaje después de un momento
-    setTimeout(() => {
-        resultDiv.style.display = 'none';
-    }, 3000);
+    const prompt = `Estructura la respuesta de forma profesional y clara:
+    1. Si es una receta, incluye tiempo, ingredientes y pasos.
+    2. Si es consejo médico, incluye beneficios y precauciones.
+    Consulta: ${query}`;
+
+    try {
+        const response = await fetch(
+            `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+            {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ contents: [{ role: 'user', parts: [{ text: prompt }] }] })
+            }
+        );
+
+        const data = await response.json();
+        
+        if (data.candidates && data.candidates[0].content.parts[0].text) {
+            let text = data.candidates[0].content.parts[0].text;
+            // Formatear Markdown básico a HTML
+            text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            text = text.replace(/^\* (.*?)$/gm, '• $1');
+            text = text.replace(/\n/g, '<br>');
+            
+            resultDiv.innerHTML = `
+                <div style="padding:0.5rem; animation: fadeIn 0.5s ease;">
+                    <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:1rem; padding-bottom:0.75rem; border-bottom:1px solid var(--border);">
+                        <i class="fa-solid fa-file-medical" style="color:var(--secondary); font-size:1.25rem;"></i>
+                        <h3 style="margin:0; font-size:1.1rem;">Informe Generado</h3>
+                    </div>
+                    <div style="font-size:0.92rem; line-height:1.7;">${text}</div>
+                </div>
+            `;
+            showToast('✅ Informe generado');
+        } else {
+            throw new Error('Sin respuesta');
+        }
+    } catch (e) {
+        console.error('Error IA:', e);
+        resultDiv.innerHTML = '<p style="color:var(--danger); text-align:center;">⚠️ Error al procesar la información. Revisa tu conexión.</p>';
+        showToast('❌ Error de conexión');
+    }
 }
 
 // ─── PREVENTION ───────────────────────────────────────────
