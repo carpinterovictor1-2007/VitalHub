@@ -3,324 +3,151 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VitalHub | Tu Compañero de Salud</title>
-    <meta property="og:title" content="VitalHub - Tu Salud, Simple y Clara">
-    <meta property="og:description" content="Tu resumen de salud diario, fácil de entender. Agua, medicinas, peso y más.">
-    <meta property="og:image" content="https://images.unsplash.com/photo-1505751172107-573967a4f995?auto=format&fit=crop&q=80&w=1200">
-    <meta property="og:type" content="website">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>VitalHub 4.0 | Supreme</title>
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="diseño.css">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-<!-- PANTALLA DE ACCESO -->
-<div id="authOverlay" class="setup-overlay">
-    <div class="auth-card">
-        <div class="auth-logo">
-            <i class="fa-solid fa-heart-pulse"></i>
-            <span>VitalHub</span>
-        </div>
-        <p class="auth-subtitle">Tu compañero personal de salud</p>
-
-        <div class="auth-tabs">
-            <button id="tabLogin" class="auth-tab active" onclick="toggleAuthForm('login')">
-                <i class="fa-solid fa-right-to-bracket"></i> Ingresar
-            </button>
-            <button id="tabRegister" class="auth-tab" onclick="toggleAuthForm('register')">
-                <i class="fa-solid fa-user-plus"></i> Registrarse
-            </button>
-        </div>
-
-        <div class="auth-content">
-
-            <!-- LOGIN -->
-            <div id="loginForm" class="auth-form-container active">
-                <div class="input-group">
-                    <label class="input-label"><i class="fa-solid fa-envelope"></i> Tu Correo</label>
-                    <input type="email" id="loginEmail" placeholder="ejemplo@correo.com">
-                </div>
-                <div class="input-group">
-                    <label class="input-label"><i class="fa-solid fa-lock"></i> Tu Contraseña</label>
-                    <input type="password" id="loginPass" placeholder="••••••••">
-                </div>
-                <button class="btn btn-primary" onclick="login()">
-                    <i class="fa-solid fa-right-to-bracket"></i> Entrar a mi cuenta
-                </button>
-                <button class="btn google-btn" onclick="loginWithGoogle()">
-                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18"> Continuar con Google
-                </button>
-                <div class="auth-divider"><span>O explora sin cuenta</span></div>
-                <button class="btn btn-ghost" onclick="enterAsGuest()">
-                    <i class="fa-solid fa-door-open"></i> Entrar sin registrarse
-                </button>
-                <p class="auth-note"><i class="fa-solid fa-circle-info"></i> Sin registro, tus datos se guardan solo en este dispositivo.</p>
+    <!-- PANTALLA DE ACCESO (V4) -->
+    <div id="authOverlay" class="auth-overlay">
+        <div class="glass-card auth-card">
+            <div style="text-align:center; margin-bottom: 2rem;">
+                <i class="fa-solid fa-heart-pulse text-primary" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                <h1 style="font-weight: 800; font-size: 2rem;">VitalHub</h1>
+                <p style="color:var(--text-muted);">Tu vida, simplificada.</p>
             </div>
-
-            <!-- REGISTRO -->
-            <div id="registerForm" class="auth-form-container">
-                <div class="input-group">
-                    <label class="input-label"><i class="fa-solid fa-user"></i> ¿Cómo te llamas?</label>
-                    <input type="text" id="regName" placeholder="Tu nombre completo">
-                </div>
-                <div class="input-group">
-                    <label class="input-label"><i class="fa-solid fa-envelope"></i> Tu Correo</label>
-                    <input type="email" id="regEmail" placeholder="ejemplo@correo.com">
-                </div>
-                <div class="input-group">
-                    <label class="input-label"><i class="fa-solid fa-lock"></i> Elige una Contraseña</label>
-                    <input type="password" id="regPass" placeholder="Mínimo 6 caracteres">
-                </div>
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
-                    <div class="input-group">
-                        <label class="input-label">Edad</label>
-                        <input type="number" id="regAge" placeholder="Años">
-                    </div>
-                    <div class="input-group">
-                        <label class="input-label">Género</label>
-                        <select id="regGender" style="width:100%; padding:0.85rem; border-radius:0.75rem; border:1px solid var(--border); background:var(--bg); color:var(--text-main);">
-                            <option value="male">Masculino</option>
-                            <option value="female">Femenino</option>
-                        </select>
-                    </div>
-                </div>
-                <button class="btn btn-primary" onclick="register()">
-                    <i class="fa-solid fa-check"></i> Crear mi cuenta gratis
+            
+            <div style="display: flex; flex-direction: column; gap: 1rem;">
+                <!-- Aquí irían los inputs de login en una versión extendida, 
+                     pero priorizamos el acceso rápido solicitado -->
+                <button class="btn btn-primary" onclick="enterAsGuest()" style="justify-content: center; padding: 1rem;">
+                    <i class="fa-solid fa-door-open"></i> Entrar como Invitado
                 </button>
-                <button class="btn google-btn" onclick="loginWithGoogle()">
-                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18"> Registrarse con Google
-                </button>
-                <div class="auth-divider"><span>¿Solo quieres probar?</span></div>
-                <button class="btn btn-ghost" onclick="enterAsGuest()">
-                    <i class="fa-solid fa-door-open"></i> Entrar sin registrarse
-                </button>
+                <div style="text-align:center; font-size: 0.8rem; color: var(--text-muted); padding: 1rem;">
+                    <i class="fa-solid fa-circle-info"></i> En modo invitado tus datos se guardan localmente.
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<!-- APP PRINCIPAL -->
-<div class="app-container hidden" id="appContent">
-    <aside class="sidebar">
-        <div class="logo">
-            <i class="fa-solid fa-heart-pulse"></i> VitalHub
-        </div>
-        <nav class="nav-menu">
-            <li class="nav-item"><a href="#" class="nav-link active" onclick="switchTab('dashboard',this)"><i class="fa-solid fa-house"></i><span>Resumen</span></a></li>
-            <li class="nav-item"><a href="#" class="nav-link" onclick="switchTab('metrics',this)"><i class="fa-solid fa-scale-balanced"></i><span>Mi Cuerpo</span></a></li>
-            <li class="nav-item"><a href="#" class="nav-link" onclick="switchTab('pantry',this)"><i class="fa-solid fa-earth-americas"></i><span>Explorar</span></a></li>
-            <li class="nav-item"><a href="#" class="nav-link" onclick="switchTab('prevention',this)"><i class="fa-solid fa-shield-heart"></i><span>Guía de Salud</span></a></li>
-            <li class="nav-item hidden" id="adminNavItem">
-                <a href="#" class="nav-link nav-admin" onclick="switchTab('admin',this)"><i class="fa-solid fa-crown"></i><span>Panel Admin</span></a>
-            </li>
-        </nav>
-        <div class="sidebar-footer">
-            <div id="syncStatus" class="sync-badge">
-                <i class="fa-solid fa-cloud-check"></i>
-                <div>
-                    <div style="font-size:0.65rem; font-weight:700; opacity:0.7; text-transform:uppercase;">Estado</div>
-                    <div id="syncLabel" style="font-size:0.8rem; font-weight:600;">Cuenta Activa</div>
-                </div>
+    <!-- CUERPO DE LA APP -->
+    <div id="appContent" class="app-shell hidden">
+        <aside class="sidebar">
+            <div style="font-weight: 800; font-size: 1.5rem; margin-bottom: 2rem; display: flex; align-items: center; gap: 0.5rem;">
+                <i class="fa-solid fa-heart-pulse text-primary"></i> <span>VitalHub</span>
             </div>
-            <button id="loginReminderBtn" class="btn btn-outline hidden" onclick="location.reload()" style="font-size:0.85rem; padding:0.7rem;">
-                <i class="fa-solid fa-user-plus"></i> Crear cuenta gratuita
-            </button>
-            <button onclick="logout()" class="btn btn-ghost-danger">
-                <i class="fa-solid fa-right-from-bracket"></i> Salir de la app
-            </button>
-            <button class="theme-toggle" onclick="toggleTheme()">
-                <i class="fa-solid fa-moon" id="themeIcon"></i>
-                <span id="themeLabel">Modo Oscuro</span>
-            </button>
-        </div>
-    </aside>
+            
+            <nav style="flex: 1;">
+                <a href="#" class="nav-link active" onclick="switchTab('dash', this)">
+                    <i class="fa-solid fa-house"></i> <span>Resumen</span>
+                </a>
+                <a href="#" class="nav-link" onclick="switchTab('metrics', this)">
+                    <i class="fa-solid fa-scale-balanced"></i> <span>Métricas</span>
+                </a>
+                <a href="#" class="nav-link" onclick="switchTab('ai', this)">
+                    <i class="fa-solid fa-brain"></i> <span>Salud AI</span>
+                </a>
+            </nav>
 
-    <main>
-        <header>
-            <div>
-                <h1 id="pageTitle">Tu Resumen de Hoy</h1>
-                <p id="greeting" class="page-subtitle">Cargando...</p>
-            </div>
-            <div class="user-profile">
-                <div class="avatar" id="userAvatar">?</div>
-                <div>
-                    <div id="userName" style="font-weight:700;">Usuario</div>
-                    <div class="user-badge"><i class="fa-solid fa-circle-check"></i> VitalHub</div>
-                </div>
-            </div>
-        </header>
-
-        <!-- RESUMEN -->
-        <div id="tab-dashboard">
-            <section class="dashboard-grid">
-                <div class="card health-score-card">
-                    <div class="card-header">
-                        <span class="card-title"><i class="fa-solid fa-star"></i> Tu Puntuación</span>
-                        <span class="tooltip-btn" onclick="showTip('score-tip')">¿Qué es esto?</span>
-                    </div>
-                    <div class="tooltip-box hidden" id="score-tip">Tu puntuación va de 0 a 100. Se calcula con tu agua, ánimo y peso. ¡Entre más alta, mejor!</div>
-                    <div class="indicator-value"><span id="healthScore">--</span><small>/100</small></div>
-                    <div class="indicator-label" id="healthStatusLabel">Calculando...</div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <span class="card-title"><i class="fa-solid fa-droplet" style="color:#2563eb"></i> Agua de Hoy</span>
-                        <span class="card-icon icon-blue"><i class="fa-solid fa-water"></i></span>
-                    </div>
-                    <div class="indicator-value"><span id="waterVal">0.0</span><small>L</small></div>
-                    <div class="indicator-label" id="waterAdvice">Meta: 2.5 litros al día</div>
-                    <div class="progress-bar"><div id="waterProgress" class="progress-fill"></div></div>
-                    <div class="quick-btns">
-                        <button class="btn btn-outline" onclick="addWater(0.25)"><i class="fa-solid fa-plus"></i> Vaso (250ml)</button>
-                        <button class="btn btn-outline" onclick="addWater(0.5)"><i class="fa-solid fa-plus"></i> Botella (500ml)</button>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <span class="card-title"><i class="fa-solid fa-face-smile" style="color:#10b981"></i> ¿Cómo te sientes?</span>
-                    </div>
-                    <div class="mood-selector">
-                        <button class="mood-btn" onclick="setMood(1)">😞</button>
-                        <button class="mood-btn" onclick="setMood(2)">😕</button>
-                        <button class="mood-btn" onclick="setMood(3)">😐</button>
-                        <button class="mood-btn" onclick="setMood(4)">🙂</button>
-                        <button class="mood-btn" onclick="setMood(5)">😄</button>
-                    </div>
-                    <div id="moodLabel" class="indicator-label" style="margin-top:0.75rem; text-align:center;">Selecciona cómo te sientes hoy</div>
-                </div>
-            </section>
-
-            <div class="card chart-card">
-                <div class="card-header">
-                    <span class="card-title"><i class="fa-solid fa-chart-area"></i> Tu semana de agua</span>
-                    <button class="btn-text" onclick="exportReport()"><i class="fa-solid fa-download"></i> Guardar reporte</button>
-                </div>
-                <canvas id="healthTrendsChart"></canvas>
-            </div>
-        </div>
-
-        <!-- MI CUERPO -->
-        <div id="tab-metrics" class="hidden">
-            <div class="metrics-grid">
-                <section class="card">
-                    <h2 class="card-title"><i class="fa-solid fa-scale-balanced"></i> ¿Cuánto pesas y mides?</h2>
-                    <p class="section-desc">Ingresa tu peso y altura para saber si estás en tu peso ideal.</p>
-                    <div class="input-group">
-                        <label class="input-label">Mi peso en kilogramos (ej: 70)</label>
-                        <input type="number" id="inputWeight" placeholder="Ej: 70" oninput="calculateBMI()">
-                    </div>
-                    <div class="input-group">
-                        <label class="input-label">Mi altura en centímetros (ej: 170)</label>
-                        <input type="number" id="inputHeight" placeholder="Ej: 170" oninput="calculateBMI()">
-                    </div>
-                    <div id="bmiResult" class="result-card hidden">
-                        <div class="result-label">Tu resultado:</div>
-                        <div class="result-value" id="bmiValue">--</div>
-                        <div id="bmiStatus" class="result-status">—</div>
-                        <div id="bmiAdvice" class="result-advice"></div>
-                    </div>
-                </section>
-                <section class="card">
-                    <h2 class="card-title"><i class="fa-solid fa-pills"></i> Mis Medicinas</h2>
-                    <p class="section-desc">Agrega tus medicinas para recordar cuáles tomar hoy.</p>
-                    <div class="input-row">
-                        <input type="text" id="medName" placeholder="Nombre de la medicina...">
-                        <button class="btn btn-primary" style="width:auto; padding:0.85rem 1.2rem;" onclick="addMedication()"><i class="fa-solid fa-plus"></i></button>
-                    </div>
-                    <div id="medicationList" class="med-list"></div>
-                </section>
-            </div>
-        </div>
-
-
-        <!-- EXPLORAR SALUD (Buscador Web) -->
-        <div id="tab-pantry" class="hidden">
-            <section class="card">
-                <div class="card-header">
-                    <h2 class="card-title"><i class="fa-solid fa-earth-americas"></i> Explorador de Salud & Recetas</h2>
-                </div>
-                <p class="section-desc">Busca información verificada, recetas saludables y consejos médicos directamente en la web.</p>
-                <div class="input-group">
-                    <label class="input-label">¿Qué deseas encontrar hoy?</label>
-                    <input type="text" id="recipeInput" placeholder="Ej: Recetas saludables con brócoli, beneficios del jengibre...">
-                </div>
-                <button class="btn btn-primary" onclick="searchHealthWeb()">
-                    <i class="fa-solid fa-magnifying-glass"></i> Buscar en la Web
+            <div style="margin-top: auto; display: flex; flex-direction: column; gap: 0.5rem;">
+                <button class="btn btn-ghost" onclick="toggleTheme()" style="justify-content: flex-start;">
+                    <i id="themeIcon" class="fa-solid fa-moon"></i> <span id="themeLabel">Modo Noche</span>
                 </button>
-                <div id="recipeResult" class="recipe-result">
-                    <div style="text-align:center; padding:1.5rem; color:var(--text-muted);">
-                        <i class="fa-solid fa-brain fa-fade" style="font-size:2rem; margin-bottom:1rem; opacity:0.5;"></i>
-                        <p>Tu asistente está listo. Ingresa una consulta arriba.</p>
-                    </div>
-                </div>
-            </section>
-        </div>
-
-        <!-- GUÍA DE SALUD -->
-        <div id="tab-prevention" class="hidden">
-            <section class="card">
-                <h2 class="card-title"><i class="fa-solid fa-shield-heart"></i> ¿Qué chequeos debo hacerme?</h2>
-                <p class="section-desc">Basado en tu edad, estos son los exámenes recomendados. ¡Más vale prevenir!</p>
-                <div class="table-container">
-                    <table id="preventionTable">
-                        <thead><tr><th>Examen recomendado</th><th>¿Cada cuánto?</th><th>Importancia</th></tr></thead>
-                        <tbody></tbody>
-                    </table>
-                </div>
-            </section>
-        </div>
-
-        <!-- PANEL ADMIN -->
-        <div id="tab-admin" class="hidden">
-            <div class="metrics-grid">
-                <section class="card admin-live-card">
-                    <div class="card-header">
-                        <h2 class="card-title"><i class="fa-solid fa-signal"></i> Usuarios en Línea</h2>
-                        <span class="live-badge"><i class="fa-solid fa-circle"></i> EN VIVO</span>
-                    </div>
-                    <div class="admin-stat">
-                        <div id="adminOnlineCount" style="font-size:3.5rem; font-weight:800; color:var(--secondary);">0</div>
-                        <div style="color:var(--text-muted); font-weight:600;">usuarios conectados ahora</div>
-                    </div>
-                    <div id="adminOnlineList" class="online-list"></div>
-                </section>
-                <section class="card">
-                    <div class="card-header">
-                        <h2 class="card-title"><i class="fa-solid fa-chart-bar"></i> Estadísticas Globales</h2>
-                    </div>
-                    <div class="admin-stats-grid">
-                        <div class="stat-item">
-                            <div class="stat-value" id="adminTotalUsers">--</div>
-                            <div class="stat-label">Usuarios registrados</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-value" id="adminOnlineCountDetail">--</div>
-                            <div class="stat-label">En línea ahora</div>
-                        </div>
-                    </div>
-                </section>
+                <button class="btn btn-ghost" onclick="logout()" style="color: var(--accent); justify-content: flex-start;">
+                    <i class="fa-solid fa-power-off"></i> <span>Cerrar Sesión</span>
+                </button>
             </div>
-        </div>
-    </main>
-</div>
+        </aside>
 
-<div id="toast">✅ Hecho!</div>
+        <main>
+            <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                <div>
+                    <h2 id="viewTitle" style="font-weight: 800; font-size: 2rem;">Resumen de Hoy</h2>
+                    <p style="color: var(--text-muted);">Bienvenido de nuevo, <span id="userName">...</span></p>
+                </div>
+            </header>
 
-<!-- Scripts de VitalHub Supreme (v3.0) -->
-<script src="config.js?v=3.0"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+            <!-- TAB: DASHBOARD -->
+            <div id="tab-dash" class="tab-content">
+                <div class="dashboard-grid">
+                    <div class="glass-card">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                            <span style="font-weight: 600; color: var(--text-muted);">AGUA DE HOY</span>
+                            <i class="fa-solid fa-droplet text-primary"></i>
+                        </div>
+                        <div style="font-size: 3rem; font-weight: 800;"><span id="waterCount">0.0</span><small>L</small></div>
+                        <div style="background: var(--border); height: 8px; border-radius: 4px; margin: 1rem 0;">
+                            <div id="waterBar" style="background: var(--primary); height: 100%; border-radius: 4px; width: 0%;"></div>
+                        </div>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button class="btn btn-primary" onclick="addWater(0.25)" style="flex: 1; justify-content: center;">+250ml</button>
+                            <button class="btn btn-primary" onclick="addWater(0.50)" style="flex: 1; justify-content: center;">+500ml</button>
+                        </div>
+                    </div>
 
+                    <div class="glass-card">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                            <span style="font-weight: 600; color: var(--text-muted);">ÁNIMO</span>
+                            <i class="fa-solid fa-face-smile text-secondary"></i>
+                        </div>
+                        <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 1rem;">
+                            <button class="mood-btn btn btn-ghost" onclick="setMood(1)" style="font-size: 1.5rem; justify-content: center;">😞</button>
+                            <button class="mood-btn btn btn-ghost" onclick="setMood(2)" style="font-size: 1.5rem; justify-content: center;">😐</button>
+                            <button class="mood-btn btn btn-ghost" onclick="setMood(3)" style="font-size: 1.5rem; justify-content: center;">🙂</button>
+                            <button class="mood-btn btn btn-ghost" onclick="setMood(4)" style="font-size: 1.5rem; justify-content: center;">😊</button>
+                            <button class="mood-btn btn btn-ghost" onclick="setMood(5)" style="font-size: 1.5rem; justify-content: center;">😄</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-<script src="firebase-config.js?v=3.0"></script>
-<script src="firebase-init.js?v=3.0"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="comando.js?v=3.0"></script>
+            <!-- TAB: METRICS -->
+            <div id="tab-metrics" class="tab-content hidden">
+                <div class="glass-card" style="max-width: 500px;">
+                    <h3 style="margin-bottom: 1rem;">Calculadora de IMC</h3>
+                    <div style="display: flex; flex-direction: column; gap: 1rem;">
+                        <input type="number" id="inWeight" placeholder="Peso en kg" style="padding: 0.75rem; border-radius: 0.5rem; border: 1px solid var(--border); background: var(--bg-main); color: var(--text-main);">
+                        <input type="number" id="inHeight" placeholder="Altura en cm" style="padding: 0.75rem; border-radius: 0.5rem; border: 1px solid var(--border); background: var(--bg-main); color: var(--text-main);">
+                        <button class="btn btn-primary" onclick="calculateBMI()" style="justify-content: center;">Calcular IMC</button>
+                        <div id="bmiZone" class="hidden" style="text-align:center; padding: 1rem; border-top: 1px solid var(--border);">
+                            <div style="font-size: 0.8rem; color: var(--text-muted);">TU IMC ES:</div>
+                            <div id="bmiVal" style="font-size: 2.5rem; font-weight: 800;">--</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB: AI -->
+            <div id="tab-ai" class="tab-content hidden">
+                <div class="glass-card">
+                    <h3 style="margin-bottom: 0.5rem;"><i class="fa-solid fa-brain"></i> Asistente de Salud Inteligente</h3>
+                    <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Haz preguntas sobre nutrición, ejercicio o recetas saludables.</p>
+                    
+                    <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
+                        <input type="text" id="searchQuery" placeholder="Ej: Receta de cena baja en carbohidratos..." style="flex: 1; padding: 1rem; border-radius: 0.75rem; border: 1px solid var(--border); background: var(--bg-main); color: var(--text-main);">
+                        <button class="btn btn-primary" onclick="generateReport()">Consultar AI</button>
+                    </div>
+
+                    <div id="aiResult" class="hidden" style="min-height: 200px; animation: slideUp 0.3s ease-out;">
+                        <!-- Aquí va el resultado de la IA -->
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- TOAST -->
+    <div id="toast"></div>
+
+    <!-- SCRIPTS CORE -->
+    <script src="settings.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <script src="vitalhub-engine.js"></script>
 </body>
 </html>

@@ -1,0 +1,203 @@
+/* 
+ * VitalHub Supreme v4.0 - Design System
+ * Aesthetic: Premium Glassmorphism & High-Contrast Dark Mode
+ */
+
+:root {
+    /* Color Palette */
+    --primary: #6366f1;
+    --primary-light: #818cf8;
+    --secondary: #10b981;
+    --accent: #f43f5e;
+    --bg-main: #f8fafc;
+    --card-bg: rgba(255, 255, 255, 0.7);
+    --card-border: rgba(255, 255, 255, 0.3);
+    --text-main: #1e293b;
+    --text-muted: #64748b;
+    --border: #e2e8f0;
+    
+    /* Shadows & Effects */
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+    --glass-blur: blur(12px);
+    --radius: 1rem;
+}
+
+[data-theme="dark"] {
+    --bg-main: #0f172a;
+    --card-bg: rgba(30, 41, 59, 0.6);
+    --card-border: rgba(255, 255, 255, 0.05);
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --border: #334155;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', -apple-system, sans-serif; }
+
+body { 
+    background: var(--bg-main); 
+    color: var(--text-main);
+    min-height: 100vh;
+    transition: background 0.3s ease;
+    overflow-x: hidden;
+    background-image: 
+        radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
+        radial-gradient(at 50% 0%, hsla(225,39%,30%,0.1) 0, transparent 50%), 
+        radial-gradient(at 100% 0%, hsla(339,49%,30%,0.05) 0, transparent 50%);
+}
+
+/* --- Layout --- */
+.app-shell {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: 280px;
+    background: var(--card-bg);
+    backdrop-filter: var(--glass-blur);
+    border-right: 1px solid var(--card-border);
+    padding: 2rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+}
+
+main {
+    flex: 1;
+    padding: 2rem 3rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* --- Components --- */
+.glass-card {
+    background: var(--card-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-md);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.glass-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+}
+
+.btn {
+    padding: 0.75rem 1.25rem;
+    border-radius: 0.75rem;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s;
+    font-size: 0.9rem;
+}
+
+.btn-primary { background: var(--primary); color: white; }
+.btn-primary:hover { background: var(--primary-light); }
+
+.btn-ghost { background: transparent; color: var(--text-main); }
+.btn-ghost:hover { background: rgba(0,0,0,0.05); }
+
+/* --- Auth --- */
+.auth-overlay {
+    position: fixed;
+    inset: 0;
+    background: var(--bg-main);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 420px;
+    animation: slideUp 0.5s ease-out;
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- Navigation --- */
+.nav-link {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    color: var(--text-muted);
+    text-decoration: none;
+    border-radius: 0.75rem;
+    transition: all 0.2s;
+    margin-bottom: 0.5rem;
+}
+
+.nav-link:hover, .nav-link.active {
+    background: var(--primary);
+    color: white;
+}
+
+/* --- Dashboard Grid --- */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+/* --- Utilities --- */
+.hidden { display: none !important; }
+.text-primary { color: var(--primary); }
+.text-secondary { color: var(--secondary); }
+
+/* --- Results Area --- */
+.report-content {
+    background: rgba(0,0,0,0.03);
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    margin-top: 1rem;
+    line-height: 1.8;
+    color: var(--text-main);
+    font-size: 0.95rem;
+}
+
+[data-theme="dark"] .report-content {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+#toast {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1e293b;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 2rem;
+    z-index: 10000;
+    display: none;
+    animation: toastFade 0.3s ease;
+}
+
+@keyframes toastFade {
+    from { bottom: 0; opacity: 0; }
+    to { bottom: 2rem; opacity: 1; }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .sidebar { width: 80px; padding: 1rem 0.5rem; }
+    .sidebar span { display: none; }
+    main { padding: 1rem; }
+}
