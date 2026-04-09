@@ -16,27 +16,38 @@ let userData = {
 
 // ─── INIT ─────────────────────────────────────────────────
 function init() {
-    applyTheme(localStorage.getItem('vH_theme') || 'light');
+    try {
+        applyTheme(localStorage.getItem('vH_theme') || 'light');
 
-    if (isGuest) {
-        loadGuestData();
-        showApp();
-        return;
-    }
-
-    auth.onAuthStateChanged(async user => {
-        if (user) {
-            currentUser = user;
-            isAdmin = user.email === ADMIN_EMAIL;
-            userData.name = user.displayName || user.email.split('@')[0];
-            await loadUserDataFromFirestore();
+        if (isGuest) {
+            loadGuestData();
             showApp();
-            updatePresence(true);
-            startHeartbeat();
-        } else {
-            showAuth(true);
+            return;
         }
-    });
+
+        if (typeof auth === 'undefined' || !auth) {
+            console.warn('⚠️ Firebase Auth no detectado. Activando Modo Invitado de emergencia.');
+            enterAsGuest();
+            return;
+        }
+
+        auth.onAuthStateChanged(async user => {
+            if (user) {
+                currentUser = user;
+                isAdmin = user.email === ADMIN_EMAIL;
+                userData.name = user.displayName || user.email.split('@')[0];
+                await loadUserDataFromFirestore();
+                showApp();
+                if (typeof updatePresence === 'function') updatePresence(true);
+                startHeartbeat();
+            } else {
+                showAuth(true);
+            }
+        });
+    } catch (e) {
+        console.error('❌ Error crítico en init():', e);
+        showToast('⚠️ Error al iniciar la aplicación');
+    }
 }
 
 function showApp() {
